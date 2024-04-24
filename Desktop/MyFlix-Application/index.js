@@ -17,7 +17,8 @@ app.use(methodOverride());
 // Middleware to log all requests
 app.use(morgan("common"));
 
-app.use(express.static(__dirname + "/movie_api"));
+//app.use(express.static("movie_api"));
+
 let topMovies = [
   {
     title: "The Shawshank Redemption",
@@ -61,22 +62,20 @@ let topMovies = [
   },
 ];
 
-app.get("/a", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Welcome to the list of topmovies!");
 });
 
-app.get("/documentation", (req, res) => {
-  res.sendFile(__dirname + "/movie_api/public/documentation.html");
-});
-//app.get("/documentation", (req, res) => {
-//res.sendFile("movie_api/public/documentation.html", { root: __dirname });
-//app.use("/documentation.html", express.static("movie_api"));
-//});
-//app.use("/documentation", express.static("public"));
-//});
 app.get("/movies", (req, res) => {
   res.json(topMovies);
 });
+
+//Static file
+app.use(
+  "/documentation",
+  express.static("movie_api/public", { index: "documentation.html" })
+);
+
 // Error handling middleware function
 app.use((err, req, res, next) => {
   console.error(err.stack);
