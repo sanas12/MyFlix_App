@@ -4,7 +4,9 @@
   "description": "to fetch the movie names",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +14,8 @@
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
     "method-override": "^3.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.0",
+    "uuid": "^9.0.1"
   }
 }
