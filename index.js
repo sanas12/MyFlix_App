@@ -21,7 +21,11 @@ app.use(cors());
 let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
-mongoose.connect("mongodb://localhost:27017/cfDB");
+//mongoose.connect("mongodb://localhost:27017/cfDB");
+mongoose.connect("process.env.CONNECTION_URI", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 //Return the response
 app.get(
