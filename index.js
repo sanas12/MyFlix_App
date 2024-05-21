@@ -23,9 +23,7 @@ let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
 //mongoose.connect("mongodb://localhost:27017/cfDB");
-const uri =
-  process.env.CONNECTION_URI ||
-  "mongodb+srv://sowmyassanala:PY7pjsJuohxl9f8x@myflixdb.f0gir8o.mongodb.net/myFlixDB";
+const uri = process.env.MONGO_URI;
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected..."))
