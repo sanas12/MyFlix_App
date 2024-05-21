@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+require("dotenv").config();
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 const Movies = Models.Movie;
@@ -22,10 +23,13 @@ let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
 //mongoose.connect("mongodb://localhost:27017/cfDB");
-mongoose.connect("process.env.CONNECTION_URI", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const uri =
+  process.env.CONNECTION_URI ||
+  "mongodb+srv://sowmyassanala:PY7pjsJuohxl9f8x@myflixdb.f0gir8o.mongodb.net/myFlixDB";
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB connected..."))
+  .catch((err) => console.log(err));
 
 //Return the response
 app.get(
