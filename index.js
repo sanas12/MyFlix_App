@@ -1,13 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
-require("dotenv").config();
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 const Movies = Models.Movie;
 const Users = Models.User;
-const Genres = Models.Genre;
-const Directors = Models.Director;
-const uuid = require("uuid");
 const app = express();
 const bodyParser = require("body-parser"),
   methodOverride = require("method-override");
@@ -23,7 +20,7 @@ let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
 //mongoose.connect("mongodb://localhost:27017/cfDB");
-const uri = process.env.MONGO_URI;
+const uri = process.env.CONNECTION_URI;
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected..."))
