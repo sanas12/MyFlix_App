@@ -22,7 +22,7 @@ require("./passport");
 //mongoose.connect("mongodb://localhost:27017/cfDB");
 const uri = process.env.CONNECTION_URI;
 mongoose
-  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(uri)
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
 
