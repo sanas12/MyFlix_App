@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -11,16 +10,16 @@ const bodyParser = require("body-parser"),
 const { check, validationResult } = require("express-validator");
 const passport = require("passport");
 const cors = require("cors");
-
+app.use(cors()); // Implementing CORS to allow all domains
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(morgan("common"));
-app.use(cors()); // Implementing CORS to allow all domains
 
 let auth = require("./auth")(app);
 require("./passport");
-mongoose.connect("mongodb://localhost:27017/cfDB");
+//mongoose.connect("mongodb://localhost:27017/cfDB");
+mongoose.connect(process.env.CONNECTION_URI);
 
 // Return the response
 app.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -71,7 +70,7 @@ app.get(
 
 // Return a list of ALL users
 app.get(
-  "/users",
+  "/listusers",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     await Users.find()
@@ -262,6 +261,7 @@ app.use((err, req, res, next) => {
 });
 
 // Listen for requests
-app.listen(8080, () => {
-  console.log("Your app is listening on port 8080.");
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port " + port);
 });
