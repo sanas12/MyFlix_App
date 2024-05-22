@@ -82,6 +82,23 @@ app.get(
       });
   }
 );
+
+//Return a list of ALL movies to the user
+app.get(
+  "/users",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    await Users.find()
+      .then((users) => {
+        res.status(200).json(users);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
+
 //Return a list of ALL users
 app.post(
   "/users",
