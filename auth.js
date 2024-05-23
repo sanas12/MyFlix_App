@@ -31,3 +31,19 @@ module.exports = (router) => {
     })(req, res);
   });
 };
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) return res.sendStatus(401); // No token provided
+
+  const token = authHeader.split(" ")[1]; // Extract token from header
+  if (!token) return res.sendStatus(401); // Token not found in the header
+
+  jwt.verify(token, jwtSecret, (err, user) => {
+    if (err) return res.sendStatus(403); // Token is invalid or expired
+    req.user = user; // Save the user information in the request
+    next(); // Proceed to the next middleware/route handler
+  });
+};
+
+module.exports = authenticateToken;
