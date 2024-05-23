@@ -1,14 +1,17 @@
+// Require necessary modules
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 const Movies = Models.Movie;
 const Users = Models.User;
+// Create an Express application
 const app = express();
 const bodyParser = require("body-parser"),
   methodOverride = require("method-override");
 const { check, validationResult } = require("express-validator");
 const passport = require("passport");
+// Import CORS
 const cors = require("cors");
 app.use(cors()); // Implementing CORS to allow all domains
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,9 +19,14 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(morgan("common"));
 
+// Import auth and require Passport module
 let auth = require("./auth")(app);
 require("./passport");
+// Allow Mongoose to connect to the database LOCALLY
 //mongoose.connect("mongodb://localhost:27017/cfDB");
+
+// Allow Mongoose to connect to the database REMOTELY
+
 mongoose.connect(process.env.CONNECTION_URI);
 
 // Return the response
@@ -261,7 +269,7 @@ app.use((err, req, res, next) => {
 });
 
 // Listen for requests
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 10000;
 app.listen(port, "0.0.0.0", () => {
   console.log("Listening on Port " + port);
 });
