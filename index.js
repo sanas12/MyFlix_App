@@ -31,7 +31,7 @@ require("./passport");
 mongoose.connect(process.env.CONNECTION_URI);
 
 // Return the response
-app.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
+app.get("/", (req, res) => {
   res.send("Welcome to the list of top movies!");
 });
 
@@ -53,8 +53,8 @@ app.get(
 app.get(
   "/movies/genres/:genreName",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Movies.findOne({ "Genre.Name": req.params.genreName })
+  async (req, res) => {
+    await Movies.findOne({ "Genre.Name": req.params.genreName })
       .then((movie) => res.json(movie.Genre))
       .catch((err) => {
         console.error(err);
@@ -67,8 +67,8 @@ app.get(
 app.get(
   "/movies/directors/:directorName",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Movies.findOne({ "Director.Name": req.params.directorName })
+  async (req, res) => {
+    await Movies.findOne({ "Director.Name": req.params.directorName })
       .then((movie) => res.json(movie.Director))
       .catch((err) => {
         console.error(err);
@@ -139,7 +139,7 @@ app.post(
 // User login endpoint
 app.post("/login", async (req, res) => {
   let { Username, Password } = req.body;
-  Users.findOne({ Username })
+  await Users.findOne({ Username })
     .then((user) => {
       if (!user) {
         return res.status(400).send("User not found");
@@ -160,8 +160,8 @@ app.post("/login", async (req, res) => {
 app.delete(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOneAndDelete({ Username: req.params.Username })
+  async (req, res) => {
+    await Users.findOneAndDelete({ Username: req.params.Username })
       .then((user) => {
         if (!user) {
           res.status(400).send(req.params.Username + " was not found");
@@ -180,8 +180,8 @@ app.delete(
 app.post(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOneAndUpdate(
+  async (req, res) => {
+    await Users.findOneAndUpdate(
       { Username: req.params.Username },
       { $push: { FavoriteMovies: req.params.MovieID } },
       { new: true }
@@ -198,8 +198,8 @@ app.post(
 app.delete(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOneAndUpdate(
+  async (req, res) => {
+    await Users.findOneAndUpdate(
       { Username: req.params.Username },
       { $pull: { FavoriteMovies: req.params.MovieID } },
       { new: true }
@@ -216,8 +216,8 @@ app.delete(
 app.get(
   "/movies/:title",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Movies.findOne({ Title: req.params.title })
+  async (req, res) => {
+    await Movies.findOne({ Title: req.params.title })
       .then((movie) => res.json(movie))
       .catch((err) => {
         console.error(err);
@@ -230,14 +230,14 @@ app.get(
 app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
+  async (req, res) => {
     if (req.user.Username !== req.params.Username) {
       return res.status(400).send("Permission denied");
     }
     let hashedPassword = req.body.Password
       ? Users.hashPassword(req.body.Password)
       : req.user.Password;
-    Users.findOneAndUpdate(
+    await Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
         $set: {
