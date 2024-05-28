@@ -14,39 +14,21 @@ const { check, validationResult } = require("express-validator");
 const passport = require("passport");
 // Import CORS
 const cors = require("cors");
-<<<<<<< HEAD
-app.use(cors()); // Implementing CORS to allow all domains
-=======
 app.use(cors());
->>>>>>> master
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(morgan("common"));
 
-<<<<<<< HEAD
-// Import auth and require Passport module
-let auth = require("./auth")(app);
-require("./passport");
-// Allow Mongoose to connect to the database LOCALLY
-//mongoose.connect("mongodb://localhost:27017/cfDB");
-
-// Allow Mongoose to connect to the database REMOTELY
-
-mongoose.connect(process.env.CONNECTION_URI);
-
-=======
 let auth = require("./auth")(app);
 require("./passport");
 
 mongoose.connect(process.env.CONNECTION_URI);
 
->>>>>>> master
 // Return the response
 app.get("/", (req, res) => {
   res.send("Welcome to the list of top movies!");
 });
-
 // Return a list of ALL movies to the user
 app.get(
   "/movies",
@@ -60,7 +42,6 @@ app.get(
       });
   }
 );
-
 // Return data about a genre (description) by name/title (e.g., “Thriller”)
 app.get(
   "/movies/genres/:genreName",
@@ -159,11 +140,7 @@ app.post("/login", async (req, res) => {
       if (!user.validatePassword(Password)) {
         return res.status(400).send("Incorrect password");
       }
-<<<<<<< HEAD
-      const token = auth.generateJWT(user); // Assuming you have a function to generate JWT
-=======
       const token = auth.generateJWT(user);
->>>>>>> master
       return res.status(200).json({ user, token });
     })
     .catch((error) => {
