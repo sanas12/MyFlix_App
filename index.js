@@ -24,14 +24,9 @@ require("./passport");
 mongoose.connect("mongodb://localhost:27017/cfDB");
 
 //Return the response
-app.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-
-  (req, res) => {
-    res.send("Welcome to the list of top movies!");
-  }
-);
+app.get("/", (req, res) => {
+  res.send("Welcome to the list of top movies!");
+});
 //Return a list of ALL movies to the user
 app.get(
   "/movies",
