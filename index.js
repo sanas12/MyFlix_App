@@ -22,12 +22,16 @@ app.use(morgan("common"));
 
 let auth = require("./auth")(app);
 require("./passport");
+console.log("MongoDB URI:", process.env.CONNECTION_URI);
+mongoose
+  .connect(process.env.CONNECTION_URI)
+  .then(() => {
+    console.log("Database connection successful");
+  })
+  .catch((err) => {
+    console.error("Database connection error:", err);
+  });
 
-mongoose.connect(process.env.CONNECTION_URI);
-
-mongoose.connection.on("error", (err) => {
-  console.error("Mongoose connection error:", err);
-});
 // Return the response
 app.get("/", (req, res) => {
   res.send("Welcome to the list of top movies!");
