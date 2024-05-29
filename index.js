@@ -99,6 +99,15 @@ app.post(
       "Username",
       "Username contains non alphanumeric characters - not allowed."
     ).isAlphanumeric(),
+    check("Password", "Password must be at least 8 characters long").isLength({
+      min: 8,
+    }),
+    check(
+      "Password",
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ).matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    ),
     check("Password", "Password is required").not().isEmpty(),
     check("Email", "Email does not appear to be valid").isEmail(),
   ],
