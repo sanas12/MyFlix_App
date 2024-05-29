@@ -1,5 +1,4 @@
 // Require necessary modules
-require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -33,7 +32,7 @@ mongoose
   });
 
 // Return the response
-app.get("/", (req, res) => {
+app.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
   res.send("Welcome to the list of top movies!");
 });
 // Return a list of ALL movies to the user
