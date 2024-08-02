@@ -7,12 +7,13 @@ const Movies = Models.Movie;
 const Users = Models.User;
 // Create an Express application
 const app = express();
-const bodyParser = require("body-parser"),
-  methodOverride = require("method-override");
+const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
 const { check, validationResult } = require("express-validator");
 const passport = require("passport");
 // Import CORS
 const cors = require("cors");
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -21,7 +22,9 @@ app.use(morgan("common"));
 
 let auth = require("./auth")(app);
 require("./passport");
+
 console.log("MongoDB URI:", process.env.CONNECTION_URI);
+
 mongoose
   .connect(process.env.CONNECTION_URI)
   .then(() => {
@@ -31,11 +34,16 @@ mongoose
     console.error("Database connection error:", err);
   });
 
-// Return the response
+/**
+ * Welcome message.
+ */
 app.get("/", (req, res) => {
   res.send("Welcome to the list of top movies!");
 });
-// Return a list of ALL movies to the user
+
+/**
+ * Return a list of ALL movies to the user.
+ */
 app.get(
   "/movies",
   passport.authenticate("jwt", { session: false }),
@@ -48,7 +56,10 @@ app.get(
       });
   }
 );
-// Return data about a genre (description) by name/title (e.g., “Thriller”)
+
+/**
+ * Return data about a genre (description) by name/title (e.g., “Thriller”).
+ */
 app.get(
   "/movies/genres/:genreName",
   passport.authenticate("jwt", { session: false }),
@@ -62,7 +73,9 @@ app.get(
   }
 );
 
-// Return data about a director (bio, birth year, death year) by name
+/**
+ * Return data about a director (bio, birth year, death year) by name.
+ */
 app.get(
   "/movies/directors/:directorName",
   passport.authenticate("jwt", { session: false }),
@@ -76,7 +89,9 @@ app.get(
   }
 );
 
-// Return a list of ALL users
+/**
+ * Return a list of ALL users.
+ */
 app.get(
   "/listusers",
   passport.authenticate("jwt", { session: false }),
@@ -90,7 +105,9 @@ app.get(
   }
 );
 
-// Allow users to register/Create
+/**
+ * Allow users to register/Create.
+ */
 app.post(
   "/users",
   [
@@ -144,7 +161,9 @@ app.post(
   }
 );
 
-// User login endpoint
+/**
+ * User login endpoint.
+ */
 app.post("/login", async (req, res) => {
   let { Username, Password } = req.body;
   await Users.findOne({ Username })
@@ -164,7 +183,9 @@ app.post("/login", async (req, res) => {
     });
 });
 
-// Allow users to deregister
+/**
+ * Allow users to deregister.
+ */
 app.delete(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
@@ -184,7 +205,9 @@ app.delete(
   }
 );
 
-// Allow users to add a movie to their list of favorites
+/**
+ * Allow users to add a movie to their list of favorites.
+ */
 app.post(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
@@ -202,7 +225,9 @@ app.post(
   }
 );
 
-// Allow users to remove a movie from their list of favorites
+/**
+ * Allow users to remove a movie from their list of favorites.
+ */
 app.delete(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
@@ -220,7 +245,9 @@ app.delete(
   }
 );
 
-// Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title
+/**
+ * Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title.
+ */
 app.get(
   "/movies/:title",
   passport.authenticate("jwt", { session: false }),
@@ -234,7 +261,9 @@ app.get(
   }
 );
 
-// Allow users to update their user info (username, password, email, date of birth)
+/**
+ * Allow users to update their user info (username, password, email, date of birth).
+ */
 app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
@@ -265,7 +294,9 @@ app.put(
   }
 );
 
-// Static file
+/**
+ * Serve static files for documentation.
+ */
 app.use(
   "/documentation",
   express.static("movie_api/public", { index: "documentation.html" })
