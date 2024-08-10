@@ -24,6 +24,15 @@ passport.use(
               message: "Incorrect username or password.",
             });
           }
+
+          // Password validation
+          if (!bcrypt.compareSync(password, user.Password)) {
+            console.log("incorrect password");
+            return callback(null, false, {
+              message: "Incorrect password.",
+            });
+          }
+
           console.log("finished");
           return callback(null, user);
         })
