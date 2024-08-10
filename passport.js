@@ -1,8 +1,8 @@
 const passport = require("passport"),
   LocalStrategy = require("passport-local").Strategy,
   Models = require("./models.js"),
-  passportJWT = require("passport-jwt");
-bcrypt = require("bcryptjs");
+  passportJWT = require("passport-jwt"),
+  bcrypt = require("bcryptjs");
 
 let Users = Models.User,
   JWTStrategy = passportJWT.Strategy,
@@ -26,14 +26,12 @@ passport.use(
           }
 
           // Password validation
-          if (!bcrypt.compareSync(password, user.Password)) {
+          if (!user.validatePassword(password)) {
             console.log("incorrect password");
-            return callback(null, false, {
-              message: "Incorrect password.",
-            });
+            return callback(null, false, { message: "Incorrect password." });
           }
 
-          console.log("finished");
+          // If username and password are correct
           return callback(null, user);
         })
         .catch((error) => {
